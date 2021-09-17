@@ -41,6 +41,11 @@ void ADefaultMedic::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 
 	PlayerInputComponent->BindAxis("LookRight", this, &ADefaultMedic::AddControllerYawInput);
 	PlayerInputComponent->BindAxis("LookUp", this, &ADefaultMedic::AddControllerPitchInput);
+
+	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ADefaultMedic::StartJump);
+	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ADefaultMedic::StopJump);
+
+	PlayerInputComponent->BindAction("Attack", IE_Pressed, this, &ADefaultMedic::Attack);
 }
 
 void ADefaultMedic::MoveForward(float Value)
@@ -55,4 +60,19 @@ void ADefaultMedic::MoveRight(float Value)
 	// Find out which way is "right" and record that the player wants to move that way.
 	FVector Direction = FRotationMatrix(Controller->GetControlRotation()).GetScaledAxis(EAxis::Y);
 	AddMovementInput(Direction, Value);
+}
+
+void ADefaultMedic::StartJump()
+{
+	bPressedJump = true;
+}
+
+void ADefaultMedic::StopJump()
+{
+	bPressedJump = false;
+}
+
+void ADefaultMedic::Attack()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Emerald, TEXT("You are attacking"));
 }
